@@ -39,8 +39,7 @@ export default function CropRecommendationsPage() {
     setTimeout(() => {
       setIsLoading(false);
       setShowResults(true);
-      toast({
-        title: "Analysis complete",
+      toast("Analysis complete", {
         description: "Here are your personalized crop recommendations",
       });
     }, 2000);
@@ -229,8 +228,7 @@ export default function CropRecommendationsPage() {
                       variant="outline"
                       className="flex items-center gap-2"
                       onClick={() => {
-                        toast({
-                          title: "Location detected",
+                        toast("Location detected", {
                           description:
                             "We've detected your location and soil conditions",
                         });

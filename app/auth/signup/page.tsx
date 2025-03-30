@@ -40,11 +40,10 @@ export default function SignupPage() {
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
-      toast({
-        title: "Account created successfully",
+      toast("Account created successfully", {
         description: "Welcome to FarmX!",
       });
-      router.push("/dashboard");
+      router.push("/");
     }, 1500);
   };
 

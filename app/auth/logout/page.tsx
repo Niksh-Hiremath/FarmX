@@ -24,8 +24,7 @@ export default function LogoutPage() {
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
-      toast({
-        title: "Logged out successfully",
+      toast("Logged out successfully", {
         description: "You have been logged out of your account",
       });
       router.push("/");

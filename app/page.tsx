@@ -13,7 +13,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/40 z-10" />
         <div
           className="absolute inset-0 bg-cover bg-center z-0"
-          style={{ backgroundImage: "url('/images/hero-farm.jpg')" }}
+          style={{ backgroundImage: "url('/hero-bg.png')" }}
         />
         <div className="container relative z-20 px-4 md:px-6">
           <div className="flex flex-col items-center text-center space-y-6">

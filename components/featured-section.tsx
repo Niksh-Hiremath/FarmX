@@ -133,13 +133,13 @@ export default function FeaturedSection() {
             <Card className="overflow-hidden">
               <div className="relative h-48">
                 <Image
-                  src="/placeholder.svg?height=192&width=384"
+                  src="/placeholder.png"
                   alt="Farmer success story"
                   fill
                   className="object-cover"
                 />
               </div>
-              <CardContent className="pt-6">
+              <CardContent>
                 <h3 className="font-bold text-lg mb-2">30% Yield Increase</h3>
                 <p className="text-muted-foreground">
                   "Using FarmX's crop recommendations, I was able to optimize my
@@ -162,13 +162,13 @@ export default function FeaturedSection() {
             <Card className="overflow-hidden">
               <div className="relative h-48">
                 <Image
-                  src="/placeholder.svg?height=192&width=384"
+                  src="/placeholder.png"
                   alt="Farmer success story"
                   fill
                   className="object-cover"
                 />
               </div>
-              <CardContent className="pt-6">
+              <CardContent>
                 <h3 className="font-bold text-lg mb-2">
                   Market Price Optimization
                 </h3>
@@ -193,13 +193,13 @@ export default function FeaturedSection() {
             <Card className="overflow-hidden">
               <div className="relative h-48">
                 <Image
-                  src="/placeholder.svg?height=192&width=384"
+                  src="/placeholder.png"
                   alt="Farmer success story"
                   fill
                   className="object-cover"
                 />
               </div>
-              <CardContent className="pt-6">
+              <CardContent>
                 <h3 className="font-bold text-lg mb-2">
                   Pest Management Success
                 </h3>

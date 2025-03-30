@@ -10,14 +10,7 @@ import {
 } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 
-// Mock data - would be replaced with API calls in production
-const weatherData = {
-  temperature: 28,
-  condition: "Sunny",
-  humidity: 65,
-  wind: 12,
-};
-
+// Market trends and farming tips (keeping your existing mock data)
 const marketTrends = [
   { crop: "Wheat", trend: "+5.2%", demand: "High" },
   { crop: "Corn", trend: "+3.8%", demand: "High" },
@@ -30,9 +23,51 @@ const farmingTips = [
   "Monitor soil pH regularly for optimal nutrient absorption",
 ];
 
+// Weather interface to match OpenWeatherMap response
+interface WeatherData {
+  main: {
+    temp: number;
+    humidity: number;
+  };
+  weather: Array<{
+    main: string;
+    description: string;
+    icon: string;
+  }>;
+  wind: {
+    speed: number;
+  };
+  name: string;
+}
+
 export default function QuickStatsPanel() {
   const [currentTip, setCurrentTip] = useState(0);
+  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
+  // Function to fetch weather based on geolocation
+  const fetchWeatherData = async (latitude: number, longitude: number) => {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/weather?lat=${latitude}&lon=${longitude}`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch weather data');
+      }
+      
+      const data = await response.json();
+      setWeatherData(data);
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching weather:', err);
+      setError('Could not update weather');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Rotating farming tips
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTip((prev) => (prev + 1) % farmingTips.length);
@@ -40,6 +75,29 @@ export default function QuickStatsPanel() {
 
     return () => clearInterval(interval);
   }, []);
+
+  // Get weather on component mount
+  useEffect(() => {
+    if (typeof window !== 'undefined' && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          fetchWeatherData(
+            position.coords.latitude,
+            position.coords.longitude
+          );
+        },
+        (err) => {
+          console.error('Geolocation error:', err);
+          setError('Unable to get your location for weather');
+        }
+      );
+    }
+  }, []);
+
+  // Get weather condition icon
+  const getWeatherIcon = (iconCode: string) => {
+    return `https://openweathermap.org/img/wn/${iconCode}.png`;
+  };
 
   return (
     <section className="py-12 bg-[#F9FBF7] w-full">
@@ -49,7 +107,7 @@ export default function QuickStatsPanel() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Weather Card */}
+          {/* Weather Card - Now with real data */}
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center text-[#2E7D32]">
@@ -57,34 +115,86 @@ export default function QuickStatsPanel() {
                 Weather Update
               </CardTitle>
               <CardDescription>
-                Current conditions for your area
+                {loading 
+                  ? "Fetching local weather..." 
+                  : weatherData 
+                    ? `Current conditions for ${weatherData.name}` 
+                    : "Current conditions for your area"}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-3xl font-bold">
-                    {weatherData.temperature}°C
-                  </p>
-                  <p className="text-muted-foreground">
-                    {weatherData.condition}
-                  </p>
+              {loading ? (
+                <div className="flex justify-center items-center h-20">
+                  <p>Loading weather data...</p>
                 </div>
-                <div className="text-right">
-                  <p className="flex items-center justify-end text-sm">
-                    <Cloud className="mr-1 h-4 w-4" />
-                    Humidity: {weatherData.humidity}%
-                  </p>
-                  <p className="flex items-center justify-end text-sm mt-1">
-                    <CloudRain className="mr-1 h-4 w-4" />
-                    Wind: {weatherData.wind} km/h
-                  </p>
+              ) : error ? (
+                <div className="bg-red-50 p-3 rounded-md text-sm text-red-800">
+                  <p>{error}</p>
+                  <button 
+                    onClick={() => {
+                      if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                          (position) => fetchWeatherData(position.coords.latitude, position.coords.longitude),
+                          (err) => setError('Unable to get your location')
+                        );
+                      }
+                    }}
+                    className="text-red-600 underline mt-2"
+                  >
+                    Try again
+                  </button>
                 </div>
-              </div>
+              ) : weatherData ? (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    {weatherData.weather[0].icon && (
+                      <img 
+                        src={getWeatherIcon(weatherData.weather[0].icon)} 
+                        alt={weatherData.weather[0].description} 
+                        className="w-12 h-12 mr-2"
+                      />
+                    )}
+                    <div>
+                      <p className="text-3xl font-bold">
+                        {Math.round(weatherData.main.temp)}°C
+                      </p>
+                      <p className="text-muted-foreground capitalize">
+                        {weatherData.weather[0].description}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="flex items-center justify-end text-sm">
+                      <Cloud className="mr-1 h-4 w-4" />
+                      Humidity: {weatherData.main.humidity}%
+                    </p>
+                    <p className="flex items-center justify-end text-sm mt-1">
+                      <CloudRain className="mr-1 h-4 w-4" />
+                      Wind: {Math.round(weatherData.wind.speed * 3.6)} km/h
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex justify-center items-center h-20">
+                  <button 
+                    onClick={() => {
+                      if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                          (position) => fetchWeatherData(position.coords.latitude, position.coords.longitude),
+                          (err) => setError('Unable to get your location')
+                        );
+                      }
+                    }}
+                    className="bg-[#4CAF50] hover:bg-[#3e8e41] text-white py-2 px-4 rounded-md"
+                  >
+                    Get Local Weather
+                  </button>
+                </div>
+              )}
             </CardContent>
           </Card>
 
-          {/* Market Trends Card */}
+          {/* Market Trends Card - Keeping your existing implementation */}
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center text-[#2E7D32]">
@@ -118,7 +228,7 @@ export default function QuickStatsPanel() {
             </CardContent>
           </Card>
 
-          {/* AI Farming Tips Card */}
+          {/* AI Farming Tips Card - Keeping your existing implementation */}
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center text-[#2E7D32]">

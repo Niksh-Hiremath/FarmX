@@ -93,7 +93,7 @@ export default function Home() {
                 </li>
                 <li>
                   <Link href="#" className="hover:text-white">
-                    Marketplace
+                    Disease Detection
                   </Link>
                 </li>
               </ul>

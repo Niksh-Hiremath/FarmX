@@ -73,16 +73,15 @@ export default function FeaturedSection() {
             </CardFooter>
           </Card>
 
-          {/* Marketplace */}
+          {/* Disease Detection */}
           <Card className="border-t-4 border-t-[#8D6E63]">
             <CardHeader>
               <div className="mb-2">
                 <ShoppingBag className="h-8 w-8 text-[#8D6E63]" />
               </div>
-              <CardTitle>Crop Marketplace</CardTitle>
+              <CardTitle>Disease Detection</CardTitle>
               <CardDescription>
-                Buy and sell crops directly, rent equipment, and manage
-                inventory
+                Scan and detect diseaes in your crop
               </CardDescription>
             </CardHeader>
             <CardFooter>
@@ -91,7 +90,7 @@ export default function FeaturedSection() {
                 className="text-[#4CAF50] p-0 hover:text-[#2E7D32] hover:bg-transparent"
                 asChild
               >
-                <Link href="/marketplace">
+                <Link href="/disease">
                   Explore <ArrowRight className="ml-1 h-4 w-4" />
                 </Link>
               </Button>

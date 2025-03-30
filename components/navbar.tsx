@@ -28,7 +28,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6">
+          <nav className="hidden md:flex items-center space-x-6 ">
             <Link
               href="/crop-recommendations"
               className="text-[#2E7D32] font-medium hover:text-[#4CAF50]"
@@ -45,13 +45,13 @@ export default function Navbar() {
               href="/farming-guides"
               className="text-[#2E7D32] font-medium hover:text-[#4CAF50]"
             >
-              Farming Guides
+               Guides
             </Link>
             <Link
-              href="/marketplace"
+              href="/disease"
               className="text-[#2E7D32] font-medium hover:text-[#4CAF50]"
             >
-              Marketplace
+              Disease Detection
             </Link>
             <Link
               href="/community"
@@ -116,11 +116,11 @@ export default function Navbar() {
                 Farming Guides
               </Link>
               <Link
-                href="/marketplace"
+                href="/disease"
                 className="text-[#2E7D32] font-medium hover:text-[#4CAF50] py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Marketplace
+                Disease Detection
               </Link>
               <Link
                 href="/community"

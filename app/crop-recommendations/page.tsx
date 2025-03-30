@@ -30,23 +30,40 @@ import CropRecommendationResults from "@/components/crop-recommendation-results"
 export default function CropRecommendationsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [recommendationData, setRecommendationData] = useState(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      setShowResults(true);
+    try {
+      const params = new URLSearchParams({
+        n: "10",
+        p: "5",
+        k: "7",
+        temperature: "24", // assuming 75°F ~ 24°C
+        humidity: "80",
+        ph: "7",
+        rainfall: "200"
+      });
+      const res = await fetch(`http://localhost:8000/recommend_crop?${params.toString()}`);
+      if (!res.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await res.json();
+      setRecommendationData(data);
       toast("Analysis complete", {
         description: "Here are your personalized crop recommendations",
       });
-    }, 2000);
+      setShowResults(true);
+    } catch (error) {
+      toast("Error fetching crop recommendation");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (showResults) {
-    return <CropRecommendationResults onReset={() => setShowResults(false)} />;
+    return <CropRecommendationResults data={recommendationData} onReset={() => setShowResults(false)} />;
   }
 
   return (

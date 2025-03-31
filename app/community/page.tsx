@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import { Filter, MessageSquare, Search, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -24,83 +25,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
-// Mock data for discussions
-const discussions = [
-  {
-    id: 1,
-    title: "Best practices for organic pest control in corn?",
-    author: {
-      name: "Michael Johnson",
-      role: "Farmer",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    category: "Pest Control",
-    replies: 24,
-    views: 342,
-    lastActivity: "2 hours ago",
-    isHot: true,
-  },
-  {
-    id: 2,
-    title:
-      "Weather forecast for Midwest region shows potential drought conditions",
-    author: {
-      name: "Sarah Williams",
-      role: "Expert",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    category: "Weather Alerts",
-    replies: 18,
-    views: 276,
-    lastActivity: "5 hours ago",
-    isHot: true,
-  },
-  {
-    id: 3,
-    title: "New government subsidy program for sustainable farming practices",
-    author: {
-      name: "Robert Chen",
-      role: "Expert",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    category: "Government Programs",
-    replies: 32,
-    views: 510,
-    lastActivity: "1 day ago",
-    isHot: false,
-  },
-  {
-    id: 4,
-    title: "Recommendations for soil testing services in the Southern region?",
-    author: {
-      name: "Emily Davis",
-      role: "Farmer",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    category: "Soil Management",
-    replies: 15,
-    views: 198,
-    lastActivity: "2 days ago",
-    isHot: false,
-  },
-  {
-    id: 5,
-    title: "Comparing yields between traditional and no-till farming methods",
-    author: {
-      name: "David Wilson",
-      role: "Farmer",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    category: "Farming Techniques",
-    replies: 29,
-    views: 387,
-    lastActivity: "3 days ago",
-    isHot: false,
-  },
-];
+const supabaseUrl = "https://uoeifswqcvvoepqcfvki.supabase.co";
+const supabaseAnonKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvZWlmc3dxY3Z2b2VwcWNmdmtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMzOTAwNjcsImV4cCI6MjA1ODk2NjA2N30.PUO9xDbL7PpatBx38Mma3bLXZeS-d6vrEo1Q8AYqFn4";
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// Mock data for regional groups
+interface Discussions {
+  id: number;
+  title: string;
+  replies: number;
+  views: number;
+  lastActivity: string;
+  isHot?: boolean;
+  author_id: string;
+  category: string;
+}
+
 const regionalGroups = [
   {
     id: 1,
@@ -189,6 +141,168 @@ const expertQA = [
 
 export default function CommunityPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [discussions, setDiscussions] = useState<Discussions[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isNewDiscussionOpen, setIsNewDiscussionOpen] = useState(false);
+  const [newDiscussionTitle, setNewDiscussionTitle] = useState("");
+  const [newDiscussionContent, setNewDiscussionContent] = useState("");
+  const [newDiscussionCategory, setNewDiscussionCategory] = useState("General");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    fetchDiscussions();
+  }, []);
+
+  async function fetchDiscussions() {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.from("Discussions").select("*");
+
+      if (error) {
+        console.error("Error fetching discussions:", error);
+        // If there's an error, use some fallback data
+        setDiscussions([
+          {
+            id: 1,
+            title: "Best practices for cover cropping in corn-soybean rotation",
+            replies: 24,
+            views: 156,
+            lastActivity: "2 hours ago",
+            isHot: true,
+            author_id: "user123",
+            category: "Soil Health",
+          },
+          {
+            id: 2,
+            title:
+              "Experiences with water conservation techniques in dry regions",
+            replies: 18,
+            views: 102,
+            lastActivity: "Yesterday",
+            author_id: "user456",
+            category: "Irrigation",
+          },
+          {
+            id: 3,
+            title:
+              "Looking for recommendations on organic pest control methods",
+            replies: 32,
+            views: 210,
+            lastActivity: "3 days ago",
+            author_id: "user789",
+            category: "Organic Farming",
+          },
+        ]);
+      } else {
+        console.log("Fetched data:", data);
+        if (data && data.length > 0) {
+          setDiscussions(data);
+        } else {
+          // If no data, use fallback
+          setDiscussions([
+            {
+              id: 1,
+              title:
+                "Best practices for cover cropping in corn-soybean rotation",
+              replies: 24,
+              views: 156,
+              lastActivity: "2 hours ago",
+              isHot: true,
+              author_id: "user123",
+              category: "Soil Health",
+            },
+            {
+              id: 2,
+              title:
+                "Experiences with water conservation techniques in dry regions",
+              replies: 18,
+              views: 102,
+              lastActivity: "Yesterday",
+              author_id: "user456",
+              category: "Irrigation",
+            },
+            {
+              id: 3,
+              title:
+                "Looking for recommendations on organic pest control methods",
+              replies: 32,
+              views: 210,
+              lastActivity: "3 days ago",
+              author_id: "user789",
+              category: "Organic Farming",
+            },
+          ]);
+        }
+      }
+    } catch (error) {
+      console.error("Unexpected error fetching discussions:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleNewDiscussionSubmit = async () => {
+    if (!newDiscussionTitle.trim() || !newDiscussionContent.trim()) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      // Create a new discussion object
+      const newDiscussion = {
+        title: newDiscussionTitle,
+        content: newDiscussionContent,
+        category: newDiscussionCategory,
+        author_id: "currentUser",
+        replies: 0,
+        views: 0,
+        lastActivity: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+      };
+
+      // Insert the new discussion into Supabase
+      const { data, error } = await supabase
+        .from("Discussions")
+        .insert([newDiscussion])
+        .select();
+
+      if (error) {
+        console.error("Error creating discussion:", error);
+        alert("Failed to create discussion. Please try again.");
+      } else {
+        console.log("Discussion created:", data);
+
+        // Add the new discussion to the local state
+        // If the insert was successful and returned data, use that
+        if (data && data.length > 0) {
+          setDiscussions([...discussions, data[0]]);
+        } else {
+          // Otherwise create a mock entry for the UI
+          const mockNewDiscussion = {
+            ...newDiscussion,
+            id: discussions.length + 1,
+            lastActivity: "Just now",
+          };
+          setDiscussions([...discussions, mockNewDiscussion as Discussions]);
+        }
+
+        // Reset form and close dialog
+        setNewDiscussionTitle("");
+        setNewDiscussionContent("");
+        setNewDiscussionCategory("General");
+        setIsNewDiscussionOpen(false);
+
+        // Show success message
+        alert("Discussion created successfully!");
+      }
+    } catch (err) {
+      console.error("Unexpected error creating discussion:", err);
+      alert("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="container py-12 mx-auto">
@@ -213,9 +327,90 @@ export default function CommunityPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button className="bg-[#4CAF50] hover:bg-[#3e8e41]">
-            Start New Discussion
-          </Button>
+          <Dialog
+            open={isNewDiscussionOpen}
+            onOpenChange={setIsNewDiscussionOpen}
+          >
+            <DialogTrigger asChild>
+              <Button className="bg-[#4CAF50] hover:bg-[#3e8e41]">
+                Start New Discussion
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[500px]">
+              <DialogHeader>
+                <DialogTitle>Start a New Discussion</DialogTitle>
+                <DialogDescription>
+                  Share your question or topic with the farming community
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid gap-2">
+                  <label htmlFor="title" className="text-sm font-medium">
+                    Title
+                  </label>
+                  <Input
+                    id="title"
+                    placeholder="Enter a clear, specific title"
+                    value={newDiscussionTitle}
+                    onChange={(e) => setNewDiscussionTitle(e.target.value)}
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <label htmlFor="category" className="text-sm font-medium">
+                    Category
+                  </label>
+                  <Select
+                    value={newDiscussionCategory}
+                    onValueChange={setNewDiscussionCategory}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="General">General</SelectItem>
+                      <SelectItem value="Soil Health">Soil Health</SelectItem>
+                      <SelectItem value="Irrigation">Irrigation</SelectItem>
+                      <SelectItem value="Pest Control">Pest Control</SelectItem>
+                      <SelectItem value="Organic Farming">
+                        Organic Farming
+                      </SelectItem>
+                      <SelectItem value="Equipment">Equipment</SelectItem>
+                      <SelectItem value="Market Trends">
+                        Market Trends
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-2">
+                  <label htmlFor="content" className="text-sm font-medium">
+                    Content
+                  </label>
+                  <Textarea
+                    id="content"
+                    placeholder="Describe your topic or question in detail"
+                    rows={5}
+                    value={newDiscussionContent}
+                    onChange={(e) => setNewDiscussionContent(e.target.value)}
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsNewDiscussionOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="bg-[#4CAF50] hover:bg-[#3e8e41]"
+                  onClick={handleNewDiscussionSubmit}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Creating..." : "Create Discussion"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
 
         <Tabs defaultValue="discussions" className="w-full">
@@ -271,60 +466,64 @@ export default function CommunityPage() {
               </div>
             </div>
 
-            <div className="space-y-4">
-              {discussions.map((discussion) => (
-                <Card key={discussion.id}>
-                  <CardHeader className="pb-2">
-                    <div className="flex justify-between">
-                      <div>
-                        <Link
-                          href={`/community/discussion/${discussion.id}`}
-                          className="hover:underline"
-                        >
-                          <CardTitle className="text-lg">
-                            {discussion.title}
-                          </CardTitle>
-                        </Link>
-                        <CardDescription className="flex items-center gap-2 mt-1">
-                          <Avatar className="h-6 w-6">
-                            <AvatarImage
-                              src={discussion.author.avatar}
-                              alt={discussion.author.name}
-                            />
-                            <AvatarFallback>
-                              {discussion.author.name.charAt(0)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <span>{discussion.author.name}</span>
-                          <Badge variant="outline" className="ml-1 text-xs">
-                            {discussion.author.role}
-                          </Badge>
-                        </CardDescription>
+            {loading ? (
+              <div className="text-center py-8">
+                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></div>
+                <p className="mt-2">Loading discussions...</p>
+              </div>
+            ) : discussions.length > 0 ? (
+              <div className="space-y-4">
+                {discussions.map((discussion) => (
+                  <Card key={discussion.id}>
+                    <CardHeader className="pb-2">
+                      <div className="flex justify-between">
+                        <div>
+                          <Link
+                            href={`/community/discussion/${discussion.id}`}
+                            className="hover:underline"
+                          >
+                            <CardTitle className="text-lg">
+                              {discussion.title}
+                            </CardTitle>
+                          </Link>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <Badge variant="outline">{discussion.category}</Badge>
+                          {discussion.isHot && (
+                            <Badge className="bg-red-500">Hot</Badge>
+                          )}
+                        </div>
                       </div>
-                      <div className="flex items-start gap-2">
-                        <Badge variant="outline">{discussion.category}</Badge>
-                        {discussion.isHot && (
-                          <Badge className="bg-red-500">Hot</Badge>
-                        )}
+                    </CardHeader>
+                    <CardFooter className="pt-2 text-sm text-muted-foreground">
+                      <div className="flex justify-between w-full">
+                        <div className="flex gap-4">
+                          <span>{discussion.replies} replies</span>
+                          <span>{discussion.views} views</span>
+                        </div>
+                        <div>Last activity: {discussion.lastActivity}</div>
                       </div>
-                    </div>
-                  </CardHeader>
-                  <CardFooter className="pt-2 text-sm text-muted-foreground">
-                    <div className="flex justify-between w-full">
-                      <div className="flex gap-4">
-                        <span>{discussion.replies} replies</span>
-                        <span>{discussion.views} views</span>
-                      </div>
-                      <div>Last activity: {discussion.lastActivity}</div>
-                    </div>
-                  </CardFooter>
-                </Card>
-              ))}
-            </div>
+                    </CardFooter>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <p>No discussions found. Be the first to start one!</p>
+                <Button
+                  className="bg-[#4CAF50] hover:bg-[#3e8e41] mt-4"
+                  onClick={() => setIsNewDiscussionOpen(true)}
+                >
+                  Start New Discussion
+                </Button>
+              </div>
+            )}
 
-            <div className="mt-6 flex justify-center">
-              <Button variant="outline">Load More Discussions</Button>
-            </div>
+            {discussions.length > 5 && (
+              <div className="mt-6 flex justify-center">
+                <Button variant="outline">Load More Discussions</Button>
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="regional-groups">

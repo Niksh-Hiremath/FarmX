@@ -1,0 +1,461 @@
+{
+    "crops": [
+      {
+        "id": 1,
+        "name": "Tomato",
+        "scientificName": "Solanum lycopersicum",
+        "title": "Complete Guide to Growing Tomatoes",
+        "description": "Learn how to grow delicious, juicy tomatoes from seed to harvest with this comprehensive guide.",
+        "category": "Vegetables",
+        "difficulty": "Easy",
+        "timeToRead": "12 min read",
+        "image": "/tomato.jpg",
+        "featured": true,
+        "growingSeason": {
+          "plantingTime": "Late spring after last frost",
+          "harvestTime": "Mid to late summer",
+          "growingZones": "3-11"
+        },
+        "quickStats": {
+          "sunlight": "Full sun (6-8 hours)",
+          "soilPH": "6.0-6.8",
+          "wateringNeeds": "1-2 inches per week",
+          "spacing": "24-36 inches apart",
+          "daysToMaturity": "60-100 days"
+        },
+        "growingSteps": [
+          {
+            "stepNumber": 1,
+            "title": "Selecting Tomato Varieties",
+            "description": "Choose between determinate (bush) varieties that fruit all at once or indeterminate (vining) varieties that produce throughout the season. Popular varieties include Beefsteak, Cherry, Roma, and Heirloom tomatoes.",
+            "tips": [
+              "Consider your climate and growing season length",
+              "Determinate varieties are better for containers and small spaces",
+              "Indeterminate varieties provide longer harvests but require staking"
+            ]
+          },
+          {
+            "stepNumber": 2,
+            "title": "Starting Seeds Indoors",
+            "description": "Start tomato seeds indoors 6-8 weeks before the last expected frost date. Use seed-starting mix in small containers with drainage holes.",
+            "tips": [
+              "Plant seeds 1/4 inch deep",
+              "Keep soil consistently moist but not soggy",
+              "Provide 14-16 hours of light daily using grow lights"
+            ]
+          },
+          {
+            "stepNumber": 3,
+            "title": "Preparing the Garden Bed",
+            "description": "Tomatoes thrive in well-draining, fertile soil rich in organic matter. Prepare your garden bed by removing weeds and amending soil with compost.",
+            "tips": [
+              "Conduct a soil test to check pH levels",
+              "Add aged compost or well-rotted manure to improve soil structure",
+              "Consider raised beds for better drainage in clay soils"
+            ]
+          },
+          {
+            "stepNumber": 4,
+            "title": "Transplanting Seedlings",
+            "description": "Transplant seedlings outdoors after all danger of frost has passed and soil temperatures reach at least 60°F (16°C).",
+            "tips": [
+              "Harden off seedlings by gradually exposing them to outdoor conditions for 7-10 days",
+              "Plant deeply, burying 2/3 of the stem to encourage root development",
+              "Space plants 24-36 inches apart"
+            ]
+          },
+          {
+            "stepNumber": 5,
+            "title": "Supporting Your Plants",
+            "description": "Install support structures like cages, stakes, or trellises at planting time to avoid damaging roots later.",
+            "tips": [
+              "Tomato cages work well for determinate varieties",
+              "Use 6-8 foot stakes for indeterminate varieties",
+              "Secure plants to supports using soft garden twine or cloth strips"
+            ]
+          },
+          {
+            "stepNumber": 6,
+            "title": "Watering Properly",
+            "description": "Water deeply and consistently, providing about 1-2 inches of water per week, adjusted for rainfall.",
+            "tips": [
+              "Water at the base of plants to keep foliage dry and prevent disease",
+              "Use drip irrigation or soaker hoses when possible",
+              "Mulch around plants to retain moisture and reduce weeds"
+            ]
+          },
+          {
+            "stepNumber": 7,
+            "title": "Fertilizing Schedule",
+            "description": "Apply a balanced fertilizer when planting, then switch to a lower nitrogen, higher phosphorus and potassium formula once flowering begins.",
+            "tips": [
+              "Avoid high-nitrogen fertilizers which promote foliage at the expense of fruit",
+              "Apply compost tea or diluted fish emulsion every 2-3 weeks",
+              "Consider calcium supplements to prevent blossom end rot"
+            ]
+          },
+          {
+            "stepNumber": 8,
+            "title": "Pruning and Maintenance",
+            "description": "Remove suckers (shoots forming in the crotch between branches) to improve air circulation and focus plant energy on fruit production.",
+            "tips": [
+              "Prune in the morning when plants are dry",
+              "Remove lower leaves that touch the soil to prevent disease spread",
+              "Pinch off growing tips of indeterminate varieties 30 days before first frost"
+            ]
+          },
+          {
+            "stepNumber": 9,
+            "title": "Pest and Disease Management",
+            "description": "Monitor plants regularly for common pests like hornworms, aphids, and diseases like early blight and powdery mildew.",
+            "tips": [
+              "Rotate crops yearly to prevent soil-borne diseases",
+              "Use companion planting with basil or marigolds to deter pests",
+              "Apply organic treatments like neem oil at the first sign of problems"
+            ]
+          },
+          {
+            "stepNumber": 10,
+            "title": "Harvesting and Storage",
+            "description": "Harvest tomatoes when they reach full color and give slightly to gentle pressure. Pick regularly to encourage continued production.",
+            "tips": [
+              "Use pruning shears to cut fruit from the vine rather than pulling",
+              "Store ripe tomatoes at room temperature, not in the refrigerator, for best flavor",
+              "Harvest all tomatoes before the first frost, including green ones which can ripen indoors"
+            ]
+          }
+        ],
+        "commonProblems": [
+          {
+            "problem": "Blossom End Rot",
+            "symptoms": "Dark, sunken spots on the bottom of fruits",
+            "causes": "Calcium deficiency, usually from inconsistent watering",
+            "solutions": "Maintain even soil moisture, add crushed eggshells or calcium supplements to soil"
+          },
+          {
+            "problem": "Early Blight",
+            "symptoms": "Dark spots with concentric rings on lower leaves that gradually spread",
+            "causes": "Fungal infection, often splashed from soil onto leaves",
+            "solutions": "Mulch to prevent soil splash, remove affected leaves, apply organic fungicide"
+          },
+          {
+            "problem": "Cracking Fruits",
+            "symptoms": "Circular or radial cracks on the top of tomatoes",
+            "causes": "Rapid growth from fluctuating water supplies",
+            "solutions": "Water consistently, harvest fruits slightly earlier during rainy periods"
+          }
+        ],
+        "seasonalCare": {
+          "spring": "Prepare beds, start seeds indoors, harden off and transplant seedlings after last frost.",
+          "summer": "Monitor water needs closely, especially during hot periods. Provide shade if temperatures exceed 95°F (35°C).",
+          "fall": "Harvest remaining fruits before frost, remove and dispose of plants at season end to prevent disease carryover.",
+          "winter": "Plan next year's garden rotating tomato location, start collecting eggshells for calcium supplementation."
+        }
+      },
+      {
+        "id": 2,
+        "name": "Wheat",
+        "scientificName": "Triticum aestivum",
+        "title": "Complete Guide to Growing Wheat",
+        "description": "Learn everything about wheat cultivation from soil preparation to harvest with this comprehensive guide.",
+        "category": "Grains",
+        "difficulty": "Medium",
+        "timeToRead": "15 min read",
+        "image": "/wheat.jpeg",
+        "featured": true,
+        "growingSeason": {
+          "plantingTime": "Fall for winter wheat, spring for spring wheat",
+          "harvestTime": "Early to mid-summer",
+          "growingZones": "3-10"
+        },
+        "quickStats": {
+          "sunlight": "Full sun",
+          "soilPH": "6.0-7.0",
+          "wateringNeeds": "16-24 inches during growing season",
+          "spacing": "6-7 inches between rows",
+          "daysToMaturity": "90-240 days depending on variety"
+        },
+        "growingSteps": [
+          {
+            "stepNumber": 1,
+            "title": "Selecting Wheat Varieties",
+            "description": "Choose between winter wheat (planted in fall, harvested in summer) and spring wheat (planted in spring, harvested in late summer). Consider hard wheat (higher protein, good for bread) or soft wheat (lower protein, good for pastries).",
+            "tips": [
+              "Winter wheat typically yields more than spring wheat",
+              "Select varieties suited to your climate and growing conditions",
+              "Consider disease-resistant varieties for your region"
+            ]
+          },
+          {
+            "stepNumber": 2,
+            "title": "Soil Preparation",
+            "description": "Wheat prefers well-draining, loamy soil with moderate fertility. Prepare your field by removing weeds and rocks, then till to a depth of 6-8 inches.",
+            "tips": [
+              "Conduct a soil test to determine pH and nutrient needs",
+              "Adjust pH to 6.0-7.0 using lime or sulfur as needed",
+              "Incorporate compost or well-aged manure to improve soil structure"
+            ]
+          },
+          {
+            "stepNumber": 3,
+            "title": "Planting Techniques",
+            "description": "Plant wheat seeds 1-1.5 inches deep in rows spaced 6-7 inches apart. For winter wheat, plant 6-8 weeks before the first expected frost. For spring wheat, plant as soon as soil can be worked.",
+            "tips": [
+              "Use a seed drill for larger areas or broadcast by hand for smaller plots",
+              "Plant at a rate of 2-3 pounds per 1,000 square feet",
+              "Ensure good seed-to-soil contact by lightly rolling after planting"
+            ]
+          },
+          {
+            "stepNumber": 4,
+            "title": "Watering Requirements",
+            "description": "Wheat needs about 16-24 inches of water throughout its growing season. Crucial periods for watering are during germination, tillering (when additional stems develop), and grain filling.",
+            "tips": [
+              "Monitor rainfall and supplement with irrigation as needed",
+              "Avoid overwatering, which can lead to disease and lodging (falling over)",
+              "Reduce irrigation gradually as grain begins to mature and dry"
+            ]
+          },
+          {
+            "stepNumber": 5,
+            "title": "Fertilizing Wheat",
+            "description": "Apply a balanced fertilizer before planting based on soil test results. Nitrogen is particularly important for wheat growth.",
+            "tips": [
+              "Apply nitrogen in split applications: at planting and again during active growth",
+              "Avoid excessive nitrogen, which can cause lodging",
+              "Consider foliar applications of micronutrients if deficiencies appear"
+            ]
+          },
+          {
+            "stepNumber": 6,
+            "title": "Weed Management",
+            "description": "Control weeds, especially during the early growth stages when wheat is most vulnerable to competition.",
+            "tips": [
+              "Use pre-emergent herbicides before planting if necessary",
+              "Cultivate between rows in small plantings",
+              "Consider dense planting to help wheat outcompete weeds"
+            ]
+          },
+          {
+            "stepNumber": 7,
+            "title": "Monitoring Growth Stages",
+            "description": "Understand wheat growth stages from germination through tillering, stem elongation, heading, flowering, and grain filling to maturity.",
+            "tips": [
+              "Each stage has different management requirements",
+              "Document growth progress to improve future plantings",
+              "Use growth stages to time fertilizer, pest control, and irrigation"
+            ]
+          },
+          {
+            "stepNumber": 8,
+            "title": "Pest and Disease Management",
+            "description": "Monitor for common wheat pests such as aphids, armyworms, and diseases like rust, powdery mildew, and Fusarium head blight.",
+            "tips": [
+              "Scout fields regularly for early detection",
+              "Use crop rotation to break disease cycles",
+              "Apply appropriate treatments at the first sign of problems"
+            ]
+          },
+          {
+            "stepNumber": 9,
+            "title": "Determining Harvest Readiness",
+            "description": "Wheat is ready to harvest when kernels are hard and cannot be dented with a fingernail. The crop should have turned from green to golden, and moisture content should be around 13-14%.",
+            "tips": [
+              "Conduct a sample harvest to check grain moisture",
+              "Harvest on a dry day to prevent moisture issues",
+              "Plan harvesting for early morning or evening in hot climates"
+            ]
+          },
+          {
+            "stepNumber": 10,
+            "title": "Harvesting and Processing",
+            "description": "Harvest wheat using a combine for larger areas or cut by hand for small plots. After harvest, wheat must be threshed to separate grain from chaff, then cleaned and dried for storage.",
+            "tips": [
+              "For small plots, cut wheat stalks and bundle into sheaves to dry",
+              "Thresh by beating dried stalks against a tarp or using a mechanical thresher",
+              "Store cleaned grain in airtight containers in a cool, dry place"
+            ]
+          }
+        ],
+        "commonProblems": [
+          {
+            "problem": "Rust",
+            "symptoms": "Orange-brown pustules on leaves and stems",
+            "causes": "Fungal infection spread by spores",
+            "solutions": "Plant resistant varieties, apply fungicides preventatively, maintain good air circulation"
+          },
+          {
+            "problem": "Lodging",
+            "symptoms": "Plants falling over, especially after heavy rain or wind",
+            "causes": "Excessive nitrogen, weak stems, or heavy grain heads",
+            "solutions": "Avoid over-fertilization, select varieties resistant to lodging, plant at appropriate density"
+          },
+          {
+            "problem": "Fusarium Head Blight",
+            "symptoms": "Bleached spikelets on the head, often with pink or orange fungal growth",
+            "causes": "Fungal infection, especially during flowering in humid conditions",
+            "solutions": "Plant resistant varieties, apply fungicide at flowering stage, practice crop rotation"
+          }
+        ],
+        "seasonalCare": {
+          "spring": "For winter wheat: Apply nitrogen, monitor for pests and diseases. For spring wheat: Prepare soil and plant.",
+          "summer": "Monitor irrigation, prepare for harvest as wheat matures, harvest when ready.",
+          "fall": "Plant winter wheat, prepare fields for next season's spring wheat.",
+          "winter": "Monitor winter wheat for snow cover which provides insulation, plan for spring planting."
+        }
+      },
+      {
+        "id": 3,
+        "name": "Corn",
+        "scientificName": "Zea mays",
+        "title": "Corn Cultivation: Best Practices",
+        "description": "Maximize your corn yields with these proven techniques and tips from planting to harvest.",
+        "category": "Grains",
+        "difficulty": "Medium",
+        "timeToRead": "14 min read",
+        "image": "/corn.jpg",
+        "featured": false,
+        "growingSeason": {
+          "plantingTime": "Late spring when soil temperatures reach 60°F (16°C)",
+          "harvestTime": "Mid to late summer, 18-24 days after silking",
+          "growingZones": "4-11"
+        },
+        "quickStats": {
+          "sunlight": "Full sun (6-8 hours minimum)",
+          "soilPH": "5.8-6.8",
+          "wateringNeeds": "1-2 inches per week",
+          "spacing": "8-12 inches between plants, 30-36 inches between rows",
+          "daysToMaturity": "60-100 days depending on variety"
+        },
+        "growingSteps": [
+          {
+            "stepNumber": 1,
+            "title": "Selecting Corn Varieties",
+            "description": "Choose between sweet corn (for fresh eating), field corn (for animal feed or grinding), popcorn, or ornamental corn. Consider days to maturity and how it fits your growing season.",
+            "tips": [
+              "Sweet corn varieties include normal sugary (SU), sugary enhanced (SE), and supersweet (Sh2)",
+              "Plant corn varieties with similar days to maturity to ensure synchronized pollination",
+              "Consider disease-resistant hybrids for your specific region"
+            ]
+          },
+          {
+            "stepNumber": 2,
+            "title": "Soil Preparation",
+            "description": "Corn is a heavy feeder requiring fertile, well-draining soil. Prepare your garden bed by removing weeds and incorporating compost or well-rotted manure.",
+            "tips": [
+              "Test soil pH and aim for 5.8-6.8",
+              "Add balanced fertilizer according to soil test results",
+              "Consider adding extra phosphorus and potassium which promotes strong root development"
+            ]
+          },
+          {
+            "stepNumber": 3,
+            "title": "Planting Techniques",
+            "description": "Plant corn seeds 1-2 inches deep when soil temperatures reach at least 60°F (16°C). Space seeds 8-12 inches apart in rows 30-36 inches apart.",
+            "tips": [
+              "Plant in blocks of at least 4 rows rather than single rows to ensure proper pollination",
+              "Stagger plantings 2 weeks apart for extended harvest",
+              "Consider using a soil thermometer to ensure proper planting temperature"
+            ]
+          },
+          {
+            "stepNumber": 4,
+            "title": "Watering Requirements",
+            "description": "Corn needs consistent moisture, especially during tasseling, silking, and ear development. Provide 1-2 inches of water per week, adjusted for rainfall.",
+            "tips": [
+              "Use drip irrigation to deliver water directly to the soil",
+              "Water deeply to encourage deep root growth",
+              "Critical watering periods are during pollination and grain filling"
+            ]
+          },
+          {
+            "stepNumber": 5,
+            "title": "Fertilizing Schedule",
+            "description": "Apply fertilizer in three stages: at planting, when plants are 12 inches tall, and when tassels begin to form.",
+            "tips": [
+              "Use a balanced fertilizer at planting",
+              "Side-dress with nitrogen when plants are 12 inches tall",
+              "Apply additional nitrogen when tassels begin to form",
+              "Avoid getting fertilizer on leaves or stalks to prevent burning"
+            ]
+          },
+          {
+            "stepNumber": 6,
+            "title": "Weed Management",
+            "description": "Control weeds, especially during the first 6 weeks of growth when corn is establishing itself and most vulnerable to competition.",
+            "tips": [
+              "Mulch around plants to suppress weeds",
+              "Cultivate shallowly to avoid damaging corn roots",
+              "Hand pull weeds close to stalks to avoid root disturbance"
+            ]
+          },
+          {
+            "stepNumber": 7,
+            "title": "Supporting Pollination",
+            "description": "Corn is wind-pollinated, requiring pollen from the tassels (male flowers) to reach the silks (female flowers) for ear development.",
+            "tips": [
+              "Plant corn in blocks rather than long single rows to improve pollination",
+              "Gently shake stalks on calm days to help distribute pollen",
+              "Hand pollinate by collecting tassels and brushing them against silks if necessary"
+            ]
+          },
+          {
+            "stepNumber": 8,
+            "title": "Pest and Disease Management",
+            "description": "Monitor for common corn pests such as corn borers, earworms, and diseases like corn smut and leaf blight.",
+            "tips": [
+              "Scout regularly for pests and diseases",
+              "Consider Bt (Bacillus thuringiensis) products for caterpillar control",
+              "Apply a few drops of mineral oil to silk ends to deter earworms"
+            ]
+          },
+          {
+            "stepNumber": 9,
+            "title": "Determining Harvest Readiness",
+            "description": "Sweet corn is ready to harvest when kernels are plump, silks have turned brown, and kernels exude a milky liquid when punctured.",
+            "tips": [
+              "Check ears 18-24 days after the first silks appear",
+              "Peel back a small section of husk to check kernel development",
+              "Harvest in the morning when sugar content is highest"
+            ]
+          },
+          {
+            "stepNumber": 10,
+            "title": "Harvesting and Storage",
+            "description": "Harvest corn by grasping the ear firmly and twisting downward. Consume sweet corn quickly for best flavor or preserve promptly.",
+            "tips": [
+              "Sweet corn begins converting sugar to starch immediately after picking",
+              "Refrigerate harvested ears uncovered to maintain sweetness",
+              "Blanch and freeze extra corn to preserve it at peak quality"
+            ]
+          }
+        ],
+        "commonProblems": [
+          {
+            "problem": "Corn Earworm",
+            "symptoms": "Caterpillars feeding on ear tips and kernels",
+            "causes": "Adult moths laying eggs on silks",
+            "solutions": "Apply several drops of mineral oil to silk ends after pollination, use Bt products, choose resistant varieties"
+          },
+          {
+            "problem": "Corn Smut",
+            "symptoms": "Gray-white galls that eventually turn black and powdery",
+            "causes": "Fungal infection that enters through wounds or young tissue",
+            "solutions": "Remove and destroy galls before they break open, practice crop rotation, avoid mechanical damage to plants"
+          },
+          {
+            "problem": "Poor Kernel Development",
+            "symptoms": "Ears with missing or partially filled kernels",
+            "causes": "Inadequate pollination, water stress during silking, or nutrient deficiencies",
+            "solutions": "Plant in blocks for better pollination, ensure adequate water during silking, proper fertilization"
+          }
+        ],
+        "seasonalCare": {
+          "spring": "Prepare soil, wait for proper soil temperature, plant seeds, protect from late frosts.",
+          "summer": "Monitor water needs closely, especially during tasseling and silking, fertilize as needed, harvest as corn matures.",
+          "fall": "Remove plant debris after harvest, consider cover crops for the corn plot.",
+          "winter": "Plan next year's rotation, order seeds, analyze previous season's results."
+        }
+      }
+    ]
+  }

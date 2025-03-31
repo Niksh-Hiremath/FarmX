@@ -12,6 +12,27 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 export default function MarketTrendsPage() {
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -89,7 +110,25 @@ export default function MarketTrendsPage() {
 
       const data = await res.json();
       console.log("Received data:", data);
-      setResponse(data);
+
+      // NEW: Filter response if it is an array; otherwise wrap the object in an array
+      const filteredData = Array.isArray(data)
+        ? data.filter(
+            (item) =>
+              item["district name"]?.toLowerCase() ===
+                formData.district.toLowerCase() &&
+              item["market name"]?.toLowerCase() ===
+                formData.market.toLowerCase()
+          )
+        : [data];
+
+      // Optionally set error if no matching records
+      if (filteredData.length === 0) {
+        setError(
+          "No matching market analysis results found for the selected district and market."
+        );
+      }
+      setResponse(filteredData);
     } catch (error) {
       console.error("Error fetching market analysis:", error);
       setError(error.message || "An error occurred while fetching data");
@@ -111,81 +150,203 @@ export default function MarketTrendsPage() {
     }
   };
 
-  // Format the response data in a more user-friendly way
+  // NEW: Updated renderResults to display trends (multiple results) if available
   const renderResults = () => {
-    if (!response) return null;
+    if (!response || response.length === 0)
+      return <p>No matching market analysis results.</p>;
 
-    return (
-      <div className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-green-50 p-3 rounded-md">
-            <h3 className="text-sm font-medium text-green-800">District</h3>
-            <p className="text-lg font-semibold">
-              {response["district name"] || "N/A"}
-            </p>
+    if (response.length > 1) {
+      // Prepare data for the chart using the timestamps converted to date strings
+      const labels = response.map((item) => {
+        const ts = item.date;
+        const dt =
+          typeof ts === "number" ? new Date(ts * 1000) : new Date(ts);
+        return dt.toLocaleDateString();
+      });
+      const minPrices = response.map((item) => Number(item["min price"]));
+      const modalPrices = response.map((item) => Number(item["modal price"]));
+      const maxPrices = response.map((item) => Number(item["max price"]));
+      const chartData = {
+        labels,
+        datasets: [
+          {
+            label: "Min Price",
+            data: minPrices,
+            borderColor: "green",
+            backgroundColor: "green",
+            fill: false,
+          },
+          {
+            label: "Modal Price",
+            data: modalPrices,
+            borderColor: "blue",
+            backgroundColor: "blue",
+            fill: false,
+          },
+          {
+            label: "Max Price",
+            data: maxPrices,
+            borderColor: "red",
+            backgroundColor: "red",
+            fill: false,
+          },
+        ],
+      };
+
+      return (
+        <div>
+          <div className="mb-6">
+            <Line data={chartData} />
           </div>
-          <div className="bg-green-50 p-3 rounded-md">
-            <h3 className="text-sm font-medium text-green-800">Market</h3>
-            <p className="text-lg font-semibold">
-              {response["market name"] || "N/A"}
-            </p>
-          </div>
+          {response.map((item, index) => (
+            <div key={index} className="mb-6 border-b pb-2">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-green-50 p-3 rounded-md">
+                  <h3 className="text-sm font-medium text-green-800">
+                    District
+                  </h3>
+                  <p className="text-lg font-semibold">
+                    {item["district name"] || "N/A"}
+                  </p>
+                </div>
+                <div className="bg-green-50 p-3 rounded-md">
+                  <h3 className="text-sm font-medium text-green-800">Market</h3>
+                  <p className="text-lg font-semibold">
+                    {item["market name"] || "N/A"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 p-4 rounded-md mt-2">
+                <h3 className="font-medium mb-2">Commodity Details</h3>
+                <div className="grid grid-cols-2 gap-y-2">
+                  <div>
+                    <span className="text-sm text-gray-500">
+                      Commodity:
+                    </span>
+                    <p className="font-semibold">{item.commodity || "N/A"}</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-500">Variety:</span>
+                    <p className="font-semibold">{item.variety || "N/A"}</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-500">Grade:</span>
+                    <p className="font-semibold">{item.grade || "N/A"}</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-500">Date:</span>
+                    <p className="font-semibold">
+                      {typeof item.date === "number"
+                        ? new Date(item.date * 1000).toLocaleDateString()
+                        : new Date(item.date).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 p-4 rounded-md mt-2">
+                <h3 className="font-medium text-blue-800 mb-2">
+                  Price Information
+                </h3>
+                <div className="grid grid-cols-3 gap-4 text-center">
+                  <div>
+                    <p className="text-xs text-blue-600">Min Price</p>
+                    <p className="text-xl font-bold">
+                      ₹{item["min price"] || "N/A"}
+                    </p>
+                  </div>
+                  <div className="border-l border-r border-blue-200">
+                    <p className="text-xs text-blue-600">Modal Price</p>
+                    <p className="text-xl font-bold">
+                      ₹{item["modal price"] || "N/A"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-blue-600">Max Price</p>
+                    <p className="text-xl font-bold">
+                      ₹{item["max price"] || "N/A"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-
-        <div className="bg-gray-50 p-4 rounded-md">
-          <h3 className="font-medium mb-2">Commodity Details</h3>
-          <div className="grid grid-cols-2 gap-y-2">
-            <div>
-              <span className="text-sm text-gray-500">Commodity:</span>
-              <p className="font-semibold">{response.commodity || "N/A"}</p>
-            </div>
-            <div>
-              <span className="text-sm text-gray-500">Variety:</span>
-              <p className="font-semibold">{response.variety || "N/A"}</p>
-            </div>
-            <div>
-              <span className="text-sm text-gray-500">Grade:</span>
-              <p className="font-semibold">{response.grade || "N/A"}</p>
-            </div>
-            <div>
-              <span className="text-sm text-gray-500">Date:</span>
-              <p className="font-semibold">{response.date || "N/A"}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-blue-50 p-4 rounded-md">
-          <h3 className="font-medium text-blue-800 mb-2">Price Information</h3>
-          <div className="grid grid-cols-3 gap-4 text-center">
-            <div>
-              <p className="text-xs text-blue-600">Min Price</p>
-              <p className="text-xl font-bold">
-                ₹{response["min price"] || "N/A"}
+      );
+    } else {
+      const item = response[0];
+      return (
+        <div className="mb-6">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-green-50 p-3 rounded-md">
+              <h3 className="text-sm font-medium text-green-800">District</h3>
+              <p className="text-lg font-semibold">
+                {item["district name"] || "N/A"}
               </p>
             </div>
-            <div className="border-l border-r border-blue-200">
-              <p className="text-xs text-blue-600">Modal Price</p>
-              <p className="text-xl font-bold">
-                ₹{response["modal price"] || "N/A"}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs text-blue-600">Max Price</p>
-              <p className="text-xl font-bold">
-                ₹{response["max price"] || "N/A"}
+            <div className="bg-green-50 p-3 rounded-md">
+              <h3 className="text-sm font-medium text-green-800">Market</h3>
+              <p className="text-lg font-semibold">
+                {item["market name"] || "N/A"}
               </p>
             </div>
           </div>
-        </div>
 
-        <div className="mt-4">
-          <p className="text-xs text-gray-500">Raw API Response:</p>
-          <pre className="bg-gray-100 p-2 rounded-md text-xs overflow-auto max-h-[100px]">
-            {JSON.stringify(response, null, 2)}
-          </pre>
+          <div className="bg-gray-50 p-4 rounded-md mt-2">
+            <h3 className="font-medium mb-2">Commodity Details</h3>
+            <div className="grid grid-cols-2 gap-y-2">
+              <div>
+                <span className="text-sm text-gray-500">Commodity:</span>
+                <p className="font-semibold">{item.commodity || "N/A"}</p>
+              </div>
+              <div>
+                <span className="text-sm text-gray-500">Variety:</span>
+                <p className="font-semibold">{item.variety || "N/A"}</p>
+              </div>
+              <div>
+                <span className="text-sm text-gray-500">Grade:</span>
+                <p className="font-semibold">{item.grade || "N/A"}</p>
+              </div>
+              <div>
+                <span className="text-sm text-gray-500">Date:</span>
+                <p className="font-semibold">
+                  {typeof item.date === "number"
+                    ? new Date(item.date * 1000).toLocaleDateString()
+                    : new Date(item.date).toLocaleDateString()}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-blue-50 p-4 rounded-md mt-2">
+            <h3 className="font-medium text-blue-800 mb-2">
+              Price Information
+            </h3>
+            <div className="grid grid-cols-3 gap-4 text-center">
+              <div>
+                <p className="text-xs text-blue-600">Min Price</p>
+                <p className="text-xl font-bold">
+                  ₹{item["min price"] || "N/A"}
+                </p>
+              </div>
+              <div className="border-l border-r border-blue-200">
+                <p className="text-xs text-blue-600">Modal Price</p>
+                <p className="text-xl font-bold">
+                  ₹{item["modal price"] || "N/A"}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-blue-600">Max Price</p>
+                <p className="text-xl font-bold">
+                  ₹{item["max price"] || "N/A"}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
   };
 
   return (

@@ -19,25 +19,25 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { login } from "./action";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    login(formData);
 
     toast("Login successful", {
       description: "Welcome back to FarmX!",
     });
-
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      router.push("/");
-    }, 1500);
+    setIsLoading(false);
+    router.push("/");
   };
 
   return (

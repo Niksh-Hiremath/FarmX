@@ -1,0 +1,11 @@
+<svg
+  className="h-8 w-8 text-[#4CAF50]"
+  fill="currentColor"
+  viewBox="0 0 24 24"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path d="M12 3L4 9v12h16V9l-8-6zm0 2.25L18 9.75V21H6V9.75L12 5.25z" />
+  <path d="M7.5 11.5h9v1.5h-9z" />
+  <path d="M7.5 14.5h9v1.5h-9z" />
+  <path d="M7.5 17.5h4.5v1.5h-4.5z" />
+</svg>

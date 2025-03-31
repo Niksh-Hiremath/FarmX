@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import { Filter, MessageSquare, Search, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -35,12 +34,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
-
-const supabaseUrl = "https://uoeifswqcvvoepqcfvki.supabase.co";
-const supabaseAnonKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvZWlmc3dxY3Z2b2VwcWNmdmtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMzOTAwNjcsImV4cCI6MjA1ODk2NjA2N30.PUO9xDbL7PpatBx38Mma3bLXZeS-d6vrEo1Q8AYqFn4";
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 interface Discussions {
   id: number;

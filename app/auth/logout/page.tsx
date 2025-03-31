@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { toast } from "sonner";
+import { logout } from "./action";
 
 export default function LogoutPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -20,15 +21,12 @@ export default function LogoutPage() {
 
   const handleLogout = () => {
     setIsLoading(true);
-
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      toast("Logged out successfully", {
-        description: "You have been logged out of your account",
-      });
-      router.push("/");
-    }, 1000);
+    logout();
+    setIsLoading(false);
+    toast("Logged out successfully", {
+      description: "You have been logged out of your account",
+    });
+    router.push("/");
   };
 
   const handleCancel = () => {

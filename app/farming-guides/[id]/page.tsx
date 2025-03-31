@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Leaf, Check, AlertCircle } from "lucide-react";
@@ -12,17 +9,17 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import farmingGuidesData from "@/app/data/farming-guides.json";
 
-export default function CropGuidePage({ params }: { params: { id: string } }) {
-  const cropId = parseInt(params.id);
+export default async function CropGuidePage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const id = await params.id;
+  const cropId = parseInt(id);
   const crop = farmingGuidesData.crops.find((c) => c.id === cropId);
 
   if (!crop) {
@@ -75,7 +72,9 @@ export default function CropGuidePage({ params }: { params: { id: string } }) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Growing Season</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Growing Season
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
@@ -134,13 +133,21 @@ export default function CropGuidePage({ params }: { params: { id: string } }) {
           </TabsList>
 
           <TabsContent value="growing-guide" className="mt-6">
-            <h2 className="text-2xl font-bold mb-6">Step-by-Step Growing Guide</h2>
+            <h2 className="text-2xl font-bold mb-6">
+              Step-by-Step Growing Guide
+            </h2>
             <Accordion type="single" collapsible className="w-full">
               {crop.growingSteps.map((step) => (
-                <AccordionItem key={step.stepNumber} value={`step-${step.stepNumber}`}>
+                <AccordionItem
+                  key={step.stepNumber}
+                  value={`step-${step.stepNumber}`}
+                >
                   <AccordionTrigger>
                     <span className="text-left">
-                      <span className="font-semibold">Step {step.stepNumber}:</span> {step.title}
+                      <span className="font-semibold">
+                        Step {step.stepNumber}:
+                      </span>{" "}
+                      {step.title}
                     </span>
                   </AccordionTrigger>
                   <AccordionContent className="px-4">
@@ -210,7 +217,7 @@ export default function CropGuidePage({ params }: { params: { id: string } }) {
                   <p>{crop.seasonalCare.spring}</p>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader className="pb-2 bg-yellow-50">
                   <CardTitle className="text-lg">Summer</CardTitle>
@@ -219,7 +226,7 @@ export default function CropGuidePage({ params }: { params: { id: string } }) {
                   <p>{crop.seasonalCare.summer}</p>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader className="pb-2 bg-orange-50">
                   <CardTitle className="text-lg">Fall</CardTitle>
@@ -228,7 +235,7 @@ export default function CropGuidePage({ params }: { params: { id: string } }) {
                   <p>{crop.seasonalCare.fall}</p>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader className="pb-2 bg-blue-50">
                   <CardTitle className="text-lg">Winter</CardTitle>

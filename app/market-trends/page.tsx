@@ -1,13 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  Calendar,
-  Filter,
-  RefreshCw,
-  TrendingDown,
-  TrendingUp,
-} from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,22 +10,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
-import MarketPriceChart from "@/components/market-price-chart";
-import SupplyDemandChart from "@/components/supply-demand-chart";
+import { Input } from "@/components/ui/input";
 
 export default function MarketTrendsPage() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [formData, setFormData] = useState({
+    district: "",
+    commodity: "",
+    state: "",
+    market: "",
+  });
+  const [response, setResponse] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const refreshData = () => {
     setIsRefreshing(true);
@@ -49,6 +42,141 @@ export default function MarketTrendsPage() {
 
     return () => clearInterval(interval);
   }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Build query parameters for POST request
+      // This FastAPI endpoint expects query parameters, not JSON body
+      const queryParams = new URLSearchParams({
+        district: formData.district,
+        commodity: formData.commodity,
+        state: formData.state,
+        market: formData.market,
+      }).toString();
+
+      const url = `http://localhost:8000/market_analysis?${queryParams}`;
+      console.log("Fetching from URL:", url);
+
+      const res = await fetch(url, {
+        method: "POST", // Keep POST method as the backend expects it
+        headers: {
+          "Accept": "application/json",
+        },
+        // No body needed as we're using query parameters
+      });
+
+      console.log("Response status:", res.status);
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Error response:", errorText);
+        throw new Error(
+          `Failed to fetch data: ${res.status} ${res.statusText}`
+        );
+      }
+
+      const data = await res.json();
+      console.log("Received data:", data);
+      setResponse(data);
+    } catch (error) {
+      console.error("Error fetching market analysis:", error);
+      setError(error.message || "An error occurred while fetching data");
+
+      // For demo purposes, let's set a mock response using the actual format returned by the API
+      setResponse({
+        'district name': 'Sangrur',
+        'market name': 'Ahmedgarh',
+        'commodity': formData.commodity,
+        'variety': 'Other',
+        'grade': 'FAQ',
+        'min price': '800',
+        'max price': '900',
+        'modal price': '900',
+        'date': '2025-03-02' // Note: API returns a datetime.date object but JSON will have it as string
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Format the response data in a more user-friendly way
+  const renderResults = () => {
+    if (!response) return null;
+    
+    return (
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="bg-green-50 p-3 rounded-md">
+            <h3 className="text-sm font-medium text-green-800">District</h3>
+            <p className="text-lg font-semibold">{response['district name'] || 'N/A'}</p>
+          </div>
+          <div className="bg-green-50 p-3 rounded-md">
+            <h3 className="text-sm font-medium text-green-800">Market</h3>
+            <p className="text-lg font-semibold">{response['market name'] || 'N/A'}</p>
+          </div>
+        </div>
+        
+        <div className="bg-gray-50 p-4 rounded-md">
+          <h3 className="font-medium mb-2">Commodity Details</h3>
+          <div className="grid grid-cols-2 gap-y-2">
+            <div>
+              <span className="text-sm text-gray-500">Commodity:</span>
+              <p className="font-semibold">{response.commodity || 'N/A'}</p>
+            </div>
+            <div>
+              <span className="text-sm text-gray-500">Variety:</span>
+              <p className="font-semibold">{response.variety || 'N/A'}</p>
+            </div>
+            <div>
+              <span className="text-sm text-gray-500">Grade:</span>
+              <p className="font-semibold">{response.grade || 'N/A'}</p>
+            </div>
+            <div>
+              <span className="text-sm text-gray-500">Date:</span>
+              <p className="font-semibold">{response.date || 'N/A'}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-blue-50 p-4 rounded-md">
+          <h3 className="font-medium text-blue-800 mb-2">Price Information</h3>
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div>
+              <p className="text-xs text-blue-600">Min Price</p>
+              <p className="text-xl font-bold">₹{response['min price'] || 'N/A'}</p>
+            </div>
+            <div className="border-l border-r border-blue-200">
+              <p className="text-xs text-blue-600">Modal Price</p>
+              <p className="text-xl font-bold">₹{response['modal price'] || 'N/A'}</p>
+            </div>
+            <div>
+              <p className="text-xs text-blue-600">Max Price</p>
+              <p className="text-xl font-bold">₹{response['max price'] || 'N/A'}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="mt-4">
+          <p className="text-xs text-gray-500">Raw API Response:</p>
+          <pre className="bg-gray-100 p-2 rounded-md text-xs overflow-auto max-h-[100px]">
+            {JSON.stringify(response, null, 2)}
+          </pre>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="container py-12 mx-auto">
@@ -82,333 +210,107 @@ export default function MarketTrendsPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg flex items-center">
-                <TrendingUp className="mr-2 h-5 w-5 text-green-500" />
-                Top Gainers
-              </CardTitle>
+            <CardHeader>
+              <CardTitle>Market Analysis Form</CardTitle>
               <CardDescription>
-                Crops with highest price increases
+                Enter commodity and location details to get market analysis
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-3">
-                <li className="flex justify-between items-center">
-                  <span className="font-medium">Soybeans</span>
-                  <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
-                    +8.2%
-                  </Badge>
-                </li>
-                <li className="flex justify-between items-center">
-                  <span className="font-medium">Corn</span>
-                  <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
-                    +5.7%
-                  </Badge>
-                </li>
-                <li className="flex justify-between items-center">
-                  <span className="font-medium">Wheat</span>
-                  <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
-                    +4.3%
-                  </Badge>
-                </li>
-              </ul>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid w-full items-center gap-2">
+                  <Label htmlFor="commodity">Commodity</Label>
+                  <Input
+                    id="commodity"
+                    name="commodity"
+                    value={formData.commodity}
+                    onChange={handleChange}
+                    placeholder="Enter commodity name"
+                    required
+                  />
+                </div>
+
+                <div className="grid w-full items-center gap-2">
+                  <Label htmlFor="state">State</Label>
+                  <Input
+                    id="state"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleChange}
+                    placeholder="Enter state name"
+                    required
+                  />
+                </div>
+
+                <div className="grid w-full items-center gap-2">
+                  <Label htmlFor="district">District</Label>
+                  <Input
+                    id="district"
+                    name="district"
+                    value={formData.district}
+                    onChange={handleChange}
+                    placeholder="Enter district name"
+                    required
+                  />
+                </div>
+
+                <div className="grid w-full items-center gap-2">
+                  <Label htmlFor="market">Market</Label>
+                  <Input
+                    id="market"
+                    name="market"
+                    value={formData.market}
+                    onChange={handleChange}
+                    placeholder="Enter market name"
+                    required
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full bg-[#2E7D32] hover:bg-[#1B5E20]"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Analyzing..." : "Get Market Analysis"}
+                </Button>
+              </form>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg flex items-center">
-                <TrendingDown className="mr-2 h-5 w-5 text-red-500" />
-                Top Decliners
-              </CardTitle>
+            <CardHeader>
+              <CardTitle>Analysis Results</CardTitle>
               <CardDescription>
-                Crops with highest price decreases
+                Market analysis based on your inputs
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-3">
-                <li className="flex justify-between items-center">
-                  <span className="font-medium">Cotton</span>
-                  <Badge className="bg-red-100 text-red-800 hover:bg-red-100">
-                    -6.1%
-                  </Badge>
-                </li>
-                <li className="flex justify-between items-center">
-                  <span className="font-medium">Rice</span>
-                  <Badge className="bg-red-100 text-red-800 hover:bg-red-100">
-                    -3.8%
-                  </Badge>
-                </li>
-                <li className="flex justify-between items-center">
-                  <span className="font-medium">Barley</span>
-                  <Badge className="bg-red-100 text-red-800 hover:bg-red-100">
-                    -2.5%
-                  </Badge>
-                </li>
-              </ul>
+              {isLoading ? (
+                <div className="flex justify-center items-center h-[300px]">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2E7D32]"></div>
+                </div>
+              ) : error ? (
+                <div className="bg-red-50 text-red-800 p-4 rounded-md">
+                  <h3 className="font-bold mb-2">Error</h3>
+                  <p>{error}</p>
+                  <div className="mt-4 p-2 bg-gray-100 rounded text-sm">
+                    <p className="font-mono">
+                      Please check that your API server is running at
+                      http://localhost:8000
+                    </p>
+                  </div>
+                </div>
+              ) : response ? (
+                renderResults()
+              ) : (
+                <div className="flex justify-center items-center h-[300px] text-muted-foreground">
+                  <p>Submit the form to see market analysis results</p>
+                </div>
+              )}
             </CardContent>
           </Card>
-
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg flex items-center">
-                <Calendar className="mr-2 h-5 w-5 text-blue-500" />
-                Upcoming Events
-              </CardTitle>
-              <CardDescription>
-                Market events that may impact prices
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-3">
-                <li className="flex flex-col">
-                  <span className="font-medium">USDA Crop Report</span>
-                  <span className="text-sm text-muted-foreground">
-                    May 12, 2023
-                  </span>
-                </li>
-                <li className="flex flex-col">
-                  <span className="font-medium">Grain Export Data Release</span>
-                  <span className="text-sm text-muted-foreground">
-                    May 15, 2023
-                  </span>
-                </li>
-                <li className="flex flex-col">
-                  <span className="font-medium">Agricultural Trade Summit</span>
-                  <span className="text-sm text-muted-foreground">
-                    May 22-24, 2023
-                  </span>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Tabs defaultValue="price-trends" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-6">
-            <TabsTrigger value="price-trends">Price Trends</TabsTrigger>
-            <TabsTrigger value="supply-demand">Supply & Demand</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="price-trends">
-            <Card>
-              <CardHeader>
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div>
-                    <CardTitle>Crop Price Trends</CardTitle>
-                    <CardDescription>
-                      Historical and current market prices
-                    </CardDescription>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <div className="flex items-center gap-2">
-                      <Label htmlFor="crop-select" className="text-sm">
-                        Crop:
-                      </Label>
-                      <Select defaultValue="all">
-                        <SelectTrigger id="crop-select" className="w-[140px]">
-                          <SelectValue placeholder="Select crop" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">All Major Crops</SelectItem>
-                          <SelectItem value="wheat">Wheat</SelectItem>
-                          <SelectItem value="corn">Corn</SelectItem>
-                          <SelectItem value="soybeans">Soybeans</SelectItem>
-                          <SelectItem value="rice">Rice</SelectItem>
-                          <SelectItem value="cotton">Cotton</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Label htmlFor="time-range" className="text-sm">
-                        Time Range:
-                      </Label>
-                      <Select defaultValue="6m">
-                        <SelectTrigger id="time-range" className="w-[140px]">
-                          <SelectValue placeholder="Select range" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="1m">1 Month</SelectItem>
-                          <SelectItem value="3m">3 Months</SelectItem>
-                          <SelectItem value="6m">6 Months</SelectItem>
-                          <SelectItem value="1y">1 Year</SelectItem>
-                          <SelectItem value="5y">5 Years</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <Button size="sm" variant="outline" className="gap-1">
-                      <Filter className="h-4 w-4" />
-                      More Filters
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[400px]">
-                  <MarketPriceChart />
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="supply-demand">
-            <Card>
-              <CardHeader>
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div>
-                    <CardTitle>Supply & Demand Analysis</CardTitle>
-                    <CardDescription>
-                      Current market balance and forecasts
-                    </CardDescription>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <div className="flex items-center gap-2">
-                      <Label htmlFor="region-select" className="text-sm">
-                        Region:
-                      </Label>
-                      <Select defaultValue="national">
-                        <SelectTrigger id="region-select" className="w-[140px]">
-                          <SelectValue placeholder="Select region" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="national">National</SelectItem>
-                          <SelectItem value="midwest">Midwest</SelectItem>
-                          <SelectItem value="south">South</SelectItem>
-                          <SelectItem value="west">West</SelectItem>
-                          <SelectItem value="northeast">Northeast</SelectItem>
-                          <SelectItem value="global">Global</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Label htmlFor="forecast-period" className="text-sm">
-                        Forecast:
-                      </Label>
-                      <Select defaultValue="6m">
-                        <SelectTrigger
-                          id="forecast-period"
-                          className="w-[140px]"
-                        >
-                          <SelectValue placeholder="Select period" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="3m">3 Months</SelectItem>
-                          <SelectItem value="6m">6 Months</SelectItem>
-                          <SelectItem value="1y">1 Year</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[400px]">
-                  <SupplyDemandChart />
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-
-        <div className="mt-8">
-          <h2 className="text-xl font-bold mb-4">Market Insights</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Price Drivers</CardTitle>
-                <CardDescription>
-                  Factors influencing current market prices
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-4">
-                  <li className="flex gap-3">
-                    <div className="w-1 bg-blue-500 rounded-full"></div>
-                    <div>
-                      <h4 className="font-medium">Weather Conditions</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Recent rainfall in the Midwest has improved crop
-                        outlook, putting downward pressure on corn and soybean
-                        prices.
-                      </p>
-                    </div>
-                  </li>
-                  <li className="flex gap-3">
-                    <div className="w-1 bg-green-500 rounded-full"></div>
-                    <div>
-                      <h4 className="font-medium">Export Demand</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Strong export demand from China is supporting soybean
-                        prices despite improved growing conditions.
-                      </p>
-                    </div>
-                  </li>
-                  <li className="flex gap-3">
-                    <div className="w-1 bg-orange-500 rounded-full"></div>
-                    <div>
-                      <h4 className="font-medium">Policy Changes</h4>
-                      <p className="text-sm text-muted-foreground">
-                        New biofuel mandates are expected to increase corn
-                        demand for ethanol production in the coming months.
-                      </p>
-                    </div>
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">
-                  Market Recommendations
-                </CardTitle>
-                <CardDescription>
-                  AI-powered suggestions based on current trends
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-4">
-                  <li className="flex gap-3">
-                    <div className="w-1 bg-green-500 rounded-full"></div>
-                    <div>
-                      <h4 className="font-medium">
-                        Consider Forward Contracts
-                      </h4>
-                      <p className="text-sm text-muted-foreground">
-                        With soybean prices at 6-month highs, consider locking
-                        in prices with forward contracts for a portion of your
-                        expected harvest.
-                      </p>
-                    </div>
-                  </li>
-                  <li className="flex gap-3">
-                    <div className="w-1 bg-yellow-500 rounded-full"></div>
-                    <div>
-                      <h4 className="font-medium">Monitor Storage Costs</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Current price trends suggest potential increases in Q3.
-                        Compare storage costs against projected price increases
-                        to optimize selling strategy.
-                      </p>
-                    </div>
-                  </li>
-                  <li className="flex gap-3">
-                    <div className="w-1 bg-blue-500 rounded-full"></div>
-                    <div>
-                      <h4 className="font-medium">Diversify Crop Portfolio</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Consider allocating a portion of acreage to specialty
-                        crops with strong price forecasts, such as organic
-                        grains or pulses.
-                      </p>
-                    </div>
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
         </div>
       </div>
     </div>

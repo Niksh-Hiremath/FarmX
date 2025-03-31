@@ -72,7 +72,7 @@ export default function MarketTrendsPage() {
       const res = await fetch(url, {
         method: "POST", // Keep POST method as the backend expects it
         headers: {
-          "Accept": "application/json",
+          Accept: "application/json",
         },
         // No body needed as we're using query parameters
       });
@@ -96,15 +96,15 @@ export default function MarketTrendsPage() {
 
       // For demo purposes, let's set a mock response using the actual format returned by the API
       setResponse({
-        'district name': 'Sangrur',
-        'market name': 'Ahmedgarh',
-        'commodity': formData.commodity,
-        'variety': 'Other',
-        'grade': 'FAQ',
-        'min price': '800',
-        'max price': '900',
-        'modal price': '900',
-        'date': '2025-03-02' // Note: API returns a datetime.date object but JSON will have it as string
+        "district name": "Sangrur",
+        "market name": "Ahmedgarh",
+        commodity: formData.commodity,
+        variety: "Other",
+        grade: "FAQ",
+        "min price": "800",
+        "max price": "900",
+        "modal price": "900",
+        date: "2025-03-02", // Note: API returns a datetime.date object but JSON will have it as string
       });
     } finally {
       setIsLoading(false);
@@ -114,38 +114,42 @@ export default function MarketTrendsPage() {
   // Format the response data in a more user-friendly way
   const renderResults = () => {
     if (!response) return null;
-    
+
     return (
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-green-50 p-3 rounded-md">
             <h3 className="text-sm font-medium text-green-800">District</h3>
-            <p className="text-lg font-semibold">{response['district name'] || 'N/A'}</p>
+            <p className="text-lg font-semibold">
+              {response["district name"] || "N/A"}
+            </p>
           </div>
           <div className="bg-green-50 p-3 rounded-md">
             <h3 className="text-sm font-medium text-green-800">Market</h3>
-            <p className="text-lg font-semibold">{response['market name'] || 'N/A'}</p>
+            <p className="text-lg font-semibold">
+              {response["market name"] || "N/A"}
+            </p>
           </div>
         </div>
-        
+
         <div className="bg-gray-50 p-4 rounded-md">
           <h3 className="font-medium mb-2">Commodity Details</h3>
           <div className="grid grid-cols-2 gap-y-2">
             <div>
               <span className="text-sm text-gray-500">Commodity:</span>
-              <p className="font-semibold">{response.commodity || 'N/A'}</p>
+              <p className="font-semibold">{response.commodity || "N/A"}</p>
             </div>
             <div>
               <span className="text-sm text-gray-500">Variety:</span>
-              <p className="font-semibold">{response.variety || 'N/A'}</p>
+              <p className="font-semibold">{response.variety || "N/A"}</p>
             </div>
             <div>
               <span className="text-sm text-gray-500">Grade:</span>
-              <p className="font-semibold">{response.grade || 'N/A'}</p>
+              <p className="font-semibold">{response.grade || "N/A"}</p>
             </div>
             <div>
               <span className="text-sm text-gray-500">Date:</span>
-              <p className="font-semibold">{response.date || 'N/A'}</p>
+              <p className="font-semibold">{response.date || "N/A"}</p>
             </div>
           </div>
         </div>
@@ -155,19 +159,25 @@ export default function MarketTrendsPage() {
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
               <p className="text-xs text-blue-600">Min Price</p>
-              <p className="text-xl font-bold">₹{response['min price'] || 'N/A'}</p>
+              <p className="text-xl font-bold">
+                ₹{response["min price"] || "N/A"}
+              </p>
             </div>
             <div className="border-l border-r border-blue-200">
               <p className="text-xs text-blue-600">Modal Price</p>
-              <p className="text-xl font-bold">₹{response['modal price'] || 'N/A'}</p>
+              <p className="text-xl font-bold">
+                ₹{response["modal price"] || "N/A"}
+              </p>
             </div>
             <div>
               <p className="text-xs text-blue-600">Max Price</p>
-              <p className="text-xl font-bold">₹{response['max price'] || 'N/A'}</p>
+              <p className="text-xl font-bold">
+                ₹{response["max price"] || "N/A"}
+              </p>
             </div>
           </div>
         </div>
-        
+
         <div className="mt-4">
           <p className="text-xs text-gray-500">Raw API Response:</p>
           <pre className="bg-gray-100 p-2 rounded-md text-xs overflow-auto max-h-[100px]">

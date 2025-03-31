@@ -98,43 +98,9 @@ export default function Home() {
                 </li>
               </ul>
             </div>
-            <div>
-              <h4 className="font-medium mb-4">Community</h4>
-              <ul className="space-y-2 text-white/80">
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Expert Q&A
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Regional Groups
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Discussion Forums
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Events
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-medium mb-4">Contact</h4>
-              <ul className="space-y-2 text-white/80">
-                <li>support@farmx.com</li>
-                <li>+1 (555) 123-4567</li>
-                <li>123 Farming Lane, Agritown</li>
-              </ul>
-            </div>
+
           </div>
-          <div className="border-t border-white/20 mt-8 pt-8 text-center text-white/60">
-            <p>© 2023 FarmX. All rights reserved.</p>
-          </div>
+
         </div>
       </footer>
     </div>
